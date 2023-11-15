@@ -1,4 +1,4 @@
-package xValidator
+package xvalidator
 
 import (
 	"errors"
