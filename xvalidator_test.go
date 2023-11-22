@@ -7,7 +7,6 @@ import (
 )
 
 func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
-	val := validator.New()
 	in := []InputTagsData{
 		{"inn",
 			"INN must be numeric and contains only 12 digits",
@@ -20,7 +19,7 @@ func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
 			},
 		},
 	}
-	v := &xValidator{translatorInit(val), in, val}
+	v := NewXValidator(in...)
 	var testStruct struct {
 		INN string `validate:"required,inn"`
 	}
