@@ -15,11 +15,11 @@ type XValidator interface {
 
 type xValidator struct {
 	trans ut.Translator
-	in    InputTagsData
+	in    []InputTagsData
 	*validator.Validate
 }
 
-type InputTagsData []struct {
+type InputTagsData struct {
 	Key            string
 	ErrDescription string
 	CustomValidation
@@ -49,7 +49,7 @@ type CustomValidation func(fl validator.FieldLevel) bool
 //		v := NewXValidator(in)
 //	 ...
 //	 v.ValidateStruct(testStruct)
-func NewXValidator(tags InputTagsData) XValidator {
+func NewXValidator(tags ...InputTagsData) XValidator {
 	val := validator.New()
 	return &xValidator{
 		translatorInit(val),

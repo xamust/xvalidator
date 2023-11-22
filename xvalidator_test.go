@@ -8,7 +8,7 @@ import (
 
 func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
 	val := validator.New()
-	in := InputTagsData{
+	in := []InputTagsData{
 		{"inn",
 			"INN must be numeric and contains only 12 digits",
 			func(fl validator.FieldLevel) bool {
