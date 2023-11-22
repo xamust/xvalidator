@@ -48,3 +48,5 @@ func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
 		})
 	}
 }
+
+func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {}
