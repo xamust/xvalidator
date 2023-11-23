@@ -84,26 +84,29 @@ func Test_xValidator_ValidateVar(t *testing.T) {
 	v := NewXValidator()
 	tests := []struct {
 		name    string
-		tag     string
-		_var    string
+		valData InputValData
 		wantErr bool
 	}{
 		{
-			name:    "correct email (custom tag)",
-			tag:     "email",
-			_var:    "1@1.ru",
+			name: "correct email (custom tag)",
+			valData: InputValData{
+				Key:     "email",
+				ValData: "1@1.ru",
+			},
 			wantErr: false,
 		},
 		{
-			name:    "incorrect email (custom tag)",
-			tag:     "email",
-			_var:    "1111@111111a",
+			name: "incorrect email (custom tag)",
+			valData: InputValData{
+				Key:     "email",
+				ValData: "1111@111111a",
+			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := v.ValidateVar(tt._var, tt.tag); (err != nil) != tt.wantErr {
+			if err := v.ValidateVar(tt.valData); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
 			}
 		})
