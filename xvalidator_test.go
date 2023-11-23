@@ -60,12 +60,12 @@ func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "correct INN (custom tag)",
+			name:    "correct Email (custom tag)",
 			email:   "1@1.ru",
 			wantErr: false,
 		},
 		{
-			name:    "incorrect INN (custom tag)",
+			name:    "incorrect Email (custom tag)",
 			email:   "1111@111111a",
 			wantErr: true,
 		},
@@ -74,6 +74,36 @@ func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			testStruct.Email = tt.email
 			if err := v.ValidateStruct(testStruct); (err != nil) != tt.wantErr {
+				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_xValidator_ValidateVar(t *testing.T) {
+	v := NewXValidator()
+	tests := []struct {
+		name    string
+		tag     string
+		_var    string
+		wantErr bool
+	}{
+		{
+			name:    "correct email (custom tag)",
+			tag:     "email",
+			_var:    "1@1.ru",
+			wantErr: false,
+		},
+		{
+			name:    "incorrect email (custom tag)",
+			tag:     "email",
+			_var:    "1111@111111a",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := v.ValidateVar(tt._var, tt.tag); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
 			}
 		})

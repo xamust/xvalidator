@@ -71,7 +71,7 @@ func (v *xValidator) ValidateStruct(tags interface{}) error {
 }
 
 func (v *xValidator) ValidateVar(field interface{}, tag string) error {
-	return v.Validate.Var(field, tag)
+	return v.translateError(v.Validate.Var(field, tag))
 }
 
 func translatorInit(val *validator.Validate) ut.Translator {
