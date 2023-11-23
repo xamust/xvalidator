@@ -60,12 +60,12 @@ func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "correct Email (custom tag)",
+			name:    "correct Email",
 			email:   "1@1.ru",
 			wantErr: false,
 		},
 		{
-			name:    "incorrect Email (custom tag)",
+			name:    "incorrect Email",
 			email:   "1111@111111a",
 			wantErr: true,
 		},
@@ -84,29 +84,47 @@ func Test_xValidator_ValidateVar(t *testing.T) {
 	v := NewXValidator()
 	tests := []struct {
 		name    string
-		valData InputValData
+		valData []InputValData
 		wantErr bool
 	}{
 		{
-			name: "correct email (custom tag)",
-			valData: InputValData{
-				Key:     "email",
-				ValData: "1@1.ru",
+			name: "correct email",
+			valData: []InputValData{
+				{
+					Key:     "email",
+					ValData: "1@1.ru",
+				},
 			},
 			wantErr: false,
 		},
 		{
-			name: "incorrect email (custom tag)",
-			valData: InputValData{
-				Key:     "email",
-				ValData: "1111@111111a",
+			name: "correct email, incorrect passwd len",
+			valData: []InputValData{
+				{
+					Key:     "required,len=9",
+					ValData: "1111",
+				},
+				{
+					Key:     "email",
+					ValData: "1@1.ru",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "incorrect email",
+			valData: []InputValData{
+				{
+					Key:     "email",
+					ValData: "1111@111111a",
+				},
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := v.ValidateVar(tt.valData); (err != nil) != tt.wantErr {
+			if err := v.ValidateVar(tt.valData...); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
 			}
 		})
