@@ -3,14 +3,17 @@ package xvalidator
 import (
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
-	"gopkg.in/go-playground/validator.v9"
-	enTrans "gopkg.in/go-playground/validator.v9/translations/en"
+	"github.com/go-playground/validator/v10"
+	enTrans "github.com/go-playground/validator/v10/translations/en"
 	"log"
 )
 
 type XValidator interface {
-	// ValidateStruct validation by tags
+	// ValidateStruct validation structs by tags
 	ValidateStruct(in interface{}) error
+
+	// ValidateVar validation var by tag
+	ValidateVar(field interface{}, tag string) error
 }
 
 type xValidator struct {
@@ -50,7 +53,7 @@ type CustomValidation func(fl validator.FieldLevel) bool
 //	 ...
 //	 v.ValidateStruct(testStruct)
 func NewXValidator(tags ...InputTagsData) XValidator {
-	val := validator.New()
+	val := validator.New(validator.WithRequiredStructEnabled())
 	return &xValidator{
 		translatorInit(val),
 		tags,
@@ -58,13 +61,17 @@ func NewXValidator(tags ...InputTagsData) XValidator {
 	}
 }
 
-func (v *xValidator) ValidateStruct(in interface{}) error {
-	if len(v.in) > 0 {
+func (v *xValidator) ValidateStruct(tags interface{}) error {
+	if len(v.in) > 0 || v.in != nil {
 		if err := v.registryCustomTags(); err != nil {
 			return err
 		}
 	}
-	return v.translateError(v.Struct(in))
+	return v.translateError(v.Struct(tags))
+}
+
+func (v *xValidator) ValidateVar(field interface{}, tag string) error {
+	return v.Validate.Var(field, tag)
 }
 
 func translatorInit(val *validator.Validate) ut.Translator {

@@ -1,7 +1,7 @@
 package xvalidator
 
 import (
-	"gopkg.in/go-playground/validator.v9"
+	"github.com/go-playground/validator/v10"
 	"strconv"
 	"testing"
 )
@@ -49,4 +49,33 @@ func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
 	}
 }
 
-func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {}
+func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
+	v := NewXValidator()
+	var testStruct struct {
+		Email string `validate:"required,email"`
+	}
+	tests := []struct {
+		name    string
+		email   string
+		wantErr bool
+	}{
+		{
+			name:    "correct INN (custom tag)",
+			email:   "1@1.ru",
+			wantErr: false,
+		},
+		{
+			name:    "incorrect INN (custom tag)",
+			email:   "1111@111111a",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testStruct.Email = tt.email
+			if err := v.ValidateStruct(testStruct); (err != nil) != tt.wantErr {
+				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
+			}
+		})
+	}
+}
