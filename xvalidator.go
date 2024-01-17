@@ -57,6 +57,8 @@ type CustomValidation func(fl validator.FieldLevel) bool
 //		v := NewXValidator(in)
 //	 ...
 //	 v.ValidateStruct(testStruct)
+//
+
 func NewXValidator(tags ...InputTagsData) XValidator {
 	val := validator.New(validator.WithRequiredStructEnabled())
 	return &xValidator{
