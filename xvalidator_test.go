@@ -138,7 +138,7 @@ func Test_xValidator_ValidateVar(t *testing.T) {
 func Test_xValidator_Echo(t *testing.T) {
 	type testStruct struct {
 		Name string `json:"name" validate:"required"`
-		INN  string `json:"inn" validate:"required,inn"`
+		INN  string `json:"inn" validate:"inn"`
 	}
 
 	tests := []struct {
@@ -154,6 +154,11 @@ func Test_xValidator_Echo(t *testing.T) {
 		{
 			name:     "incorrect custom tag data",
 			userJSON: `{"name":"Alice","inn":"jon@labstack.com"}`,
+			wantErr:  true,
+		},
+		{
+			name:     "empty custom tag data",
+			userJSON: `{"name":"Alice"}`,
 			wantErr:  true,
 		},
 	}
