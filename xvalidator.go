@@ -69,21 +69,22 @@ func NewXValidator(tags ...InputTagsData) XValidator {
 // Validate все кастомные теги грузятся при инициализации валидатора,
 // далее в метод передаем структуру
 func (v *xValidator) Validate(in interface{}) error {
-	return v.validateStruct(in)
-}
-
-func (v *xValidator) validateStruct(tags interface{}) error {
 	if len(v.in) > 0 || v.in != nil {
 		if err := v.registryCustomTags(); err != nil {
 			return err
 		}
 	}
-	return v.translateError(v.validate.Struct(tags))
+	return v.translateError(v.validate.Struct(in))
 }
 
 // ValidateVar обертка для дефолтного валидатора,
 // в метод передаем структуру(ы) с тегом и данными
 func (v *xValidator) ValidateVar(in ...InputValData) error {
+	if len(v.in) > 0 || v.in != nil {
+		if err := v.registryCustomTags(); err != nil {
+			return err
+		}
+	}
 	for _, data := range in {
 		if err := v.translateError(v.validate.Var(data.ValData, data.Key)); err != nil {
 			return err

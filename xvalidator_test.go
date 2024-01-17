@@ -135,6 +135,55 @@ func Test_xValidator_ValidateVar(t *testing.T) {
 	}
 }
 
+func Test_xValidator_ValidateVarWithCustomTag(t *testing.T) {
+	in := []InputTagsData{
+		{"inn",
+			"INN must be numeric and contains only 12 digits",
+			func(fl validator.FieldLevel) bool {
+				inn := fl.Field().String()
+				if _, err := strconv.Atoi(inn); err != nil || len(inn) != 12 {
+					return false
+				}
+				return true
+			},
+		},
+	}
+	v := NewXValidator(in...)
+	tests := []struct {
+		name    string
+		valData []InputValData
+		wantErr bool
+	}{
+		{
+			name: "correct data",
+			valData: []InputValData{
+				{
+					Key:     "inn",
+					ValData: "111111111111",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "incorrect data",
+			valData: []InputValData{
+				{
+					Key:     "inn",
+					ValData: "1111@111111a",
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := v.ValidateVar(tt.valData...); (err != nil) != tt.wantErr {
+				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
+			}
+		})
+	}
+}
+
 func Test_xValidator_Echo(t *testing.T) {
 	type testStruct struct {
 		Name string `json:"name" validate:"required"`
