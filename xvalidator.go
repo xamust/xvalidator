@@ -14,12 +14,19 @@ type XValidator interface {
 
 	// ValidateVar validation var by tag
 	ValidateVar(in ...InputValData) error
+
+	// Validate validation for echo
+	Validate(in interface{}) error
 }
 
 type xValidator struct {
-	trans ut.Translator
-	in    []InputTagsData
-	*validator.Validate
+	trans    ut.Translator
+	in       []InputTagsData
+	validate *validator.Validate
+}
+
+func (v *xValidator) Validate(in interface{}) error {
+	return v.validateStruct(in)
 }
 
 type InputTagsData struct {
@@ -69,19 +76,23 @@ func NewXValidator(tags ...InputTagsData) XValidator {
 // ValidateStruct все кастомные теги грузятся при инициализации валидатора,
 // далее в метод передаем структуру
 func (v *xValidator) ValidateStruct(tags interface{}) error {
+	return v.validateStruct(tags)
+}
+
+func (v *xValidator) validateStruct(tags interface{}) error {
 	if len(v.in) > 0 || v.in != nil {
 		if err := v.registryCustomTags(); err != nil {
 			return err
 		}
 	}
-	return v.translateError(v.Struct(tags))
+	return v.translateError(v.validate.Struct(tags))
 }
 
 // ValidateVar обертка для дефолтного валидатора,
 // в метод передаем структуру(ы) с тегом и данными
 func (v *xValidator) ValidateVar(in ...InputValData) error {
 	for _, data := range in {
-		if err := v.translateError(v.Validate.Var(data.ValData, data.Key)); err != nil {
+		if err := v.translateError(v.validate.Var(data.ValData, data.Key)); err != nil {
 			return err
 		}
 	}

@@ -34,5 +34,5 @@ func (v *xValidator) addCustomTranslation(tag string, errMessage string) {
 		}
 		return t
 	}
-	_ = v.RegisterTranslation(tag, v.trans, registerFn, transFn)
+	_ = v.validate.RegisterTranslation(tag, v.trans, registerFn, transFn)
 }

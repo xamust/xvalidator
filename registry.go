@@ -17,7 +17,7 @@ func (v *xValidator) registryCustomTags() error {
 // registryTag tag registry
 func (v *xValidator) registryTag(tagName, errDescr string, fl func(fl validator.FieldLevel) bool) error {
 	// register custom tag
-	if err := v.RegisterValidation(tagName, fl); err != nil {
+	if err := v.validate.RegisterValidation(tagName, fl); err != nil {
 		return err
 	}
 	// register custom err translation
