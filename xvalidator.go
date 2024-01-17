@@ -9,9 +9,6 @@ import (
 )
 
 type XValidator interface {
-	// ValidateStruct validation structs by tags
-	ValidateStruct(in interface{}) error
-
 	// ValidateVar validation var by tag
 	ValidateVar(in ...InputValData) error
 
@@ -23,10 +20,6 @@ type xValidator struct {
 	trans    ut.Translator
 	in       []InputTagsData
 	validate *validator.Validate
-}
-
-func (v *xValidator) Validate(in interface{}) error {
-	return v.validateStruct(in)
 }
 
 type InputTagsData struct {
@@ -73,10 +66,10 @@ func NewXValidator(tags ...InputTagsData) XValidator {
 	}
 }
 
-// ValidateStruct все кастомные теги грузятся при инициализации валидатора,
+// Validate все кастомные теги грузятся при инициализации валидатора,
 // далее в метод передаем структуру
-func (v *xValidator) ValidateStruct(tags interface{}) error {
-	return v.validateStruct(tags)
+func (v *xValidator) Validate(in interface{}) error {
+	return v.validateStruct(in)
 }
 
 func (v *xValidator) validateStruct(tags interface{}) error {

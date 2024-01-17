@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
+func Test_xValidator_ValidateWithOnlyCustomTag(t *testing.T) {
 	in := []InputTagsData{
 		{"inn",
 			"INN must be numeric and contains only 12 digits",
@@ -46,14 +46,14 @@ func Test_xValidator_ValidateStructWithOnlyCustomTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testStruct.INN = tt.inn
-			if err := v.ValidateStruct(testStruct); (err != nil) != tt.wantErr {
+			if err := v.Validate(testStruct); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
 			}
 		})
 	}
 }
 
-func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
+func Test_xValidator_ValidateWithoutCustomTag(t *testing.T) {
 	v := NewXValidator()
 	var testStruct struct {
 		Email string `validate:"required,email"`
@@ -77,7 +77,7 @@ func Test_xValidator_ValidateStructWithoutCustomTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testStruct.Email = tt.email
-			if err := v.ValidateStruct(testStruct); (err != nil) != tt.wantErr {
+			if err := v.Validate(testStruct); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateStruct() error:\n%s,\nwantErr: %v", err.Error(), tt.wantErr)
 			}
 		})
