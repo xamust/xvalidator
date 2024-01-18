@@ -25,7 +25,7 @@ func Test_xValidator_ValidateWithOnlyCustomTag(t *testing.T) {
 	}
 	v := NewXValidator(in...)
 	var testStruct struct {
-		INN string `validate:"required,inn"`
+		INN string `validate:"inn"`
 	}
 	tests := []struct {
 		name    string

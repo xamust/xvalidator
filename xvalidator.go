@@ -40,7 +40,7 @@ type CustomValidation func(fl validator.FieldLevel) bool
 // Example:
 //
 //	 var testStruct struct {
-//			INN string `validate:"required,inn"`
+//			INN string `validate:"inn"`
 //		}
 //		in := InputTagsData{
 //			{"inn",
@@ -56,7 +56,7 @@ type CustomValidation func(fl validator.FieldLevel) bool
 //		}
 //		v := NewXValidator(in)
 //	 ...
-//	 v.ValidateStruct(testStruct)
+//	 v.Validate(testStruct)
 //
 
 func NewXValidator(tags ...InputTagsData) XValidator {
