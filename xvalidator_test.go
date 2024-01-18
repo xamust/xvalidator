@@ -23,7 +23,10 @@ func Test_xValidator_ValidateWithOnlyCustomTag(t *testing.T) {
 			},
 		},
 	}
-	v := NewXValidator(in...)
+	v, err := NewXValidator(in...)
+	if err != nil {
+		t.Error(err)
+	}
 	var testStruct struct {
 		INN string `validate:"inn"`
 	}
@@ -54,7 +57,10 @@ func Test_xValidator_ValidateWithOnlyCustomTag(t *testing.T) {
 }
 
 func Test_xValidator_ValidateWithoutCustomTag(t *testing.T) {
-	v := NewXValidator()
+	v, err := NewXValidator()
+	if err != nil {
+		t.Error(err)
+	}
 	var testStruct struct {
 		Email string `validate:"required,email"`
 	}
@@ -85,7 +91,10 @@ func Test_xValidator_ValidateWithoutCustomTag(t *testing.T) {
 }
 
 func Test_xValidator_ValidateVar(t *testing.T) {
-	v := NewXValidator()
+	v, err := NewXValidator()
+	if err != nil {
+		t.Error(err)
+	}
 	tests := []struct {
 		name    string
 		valData []InputValData
@@ -148,7 +157,10 @@ func Test_xValidator_ValidateVarWithCustomTag(t *testing.T) {
 			},
 		},
 	}
-	v := NewXValidator(in...)
+	v, err := NewXValidator(in...)
+	if err != nil {
+		t.Error(err)
+	}
 	tests := []struct {
 		name    string
 		valData []InputValData
@@ -227,7 +239,12 @@ func Test_xValidator_Echo(t *testing.T) {
 
 	innTestStruct := new(testStruct)
 	e := echo.New()
-	e.Validator = NewXValidator(in...)
+
+	v, err := NewXValidator(in...)
+	if err != nil {
+		t.Error(err)
+	}
+	e.Validator = v
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
